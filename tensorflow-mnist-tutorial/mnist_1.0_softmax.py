@@ -17,8 +17,11 @@ import tensorflow as tf
 import tensorflowvisu
 import mnistdata
 import math
+import os
 print("Tensorflow version " + tf.__version__)
 tf.set_random_seed(0)
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
 # neural network with 1 layer of 10 softmax neurons
 #
@@ -49,12 +52,27 @@ W = tf.Variable(tf.zeros([784, 10]))
 # biases b[10]
 b = tf.Variable(tf.zeros([10]))
 
+
+W1 = tf.Variable(tf.truncated_normal([784, 200] ,stddev=0.1))
+B1 = tf.Variable(tf.zeros([200]))
+W2 = tf.Variable(tf.truncated_normal([200, 100], stddev=0.1))
+B2 = tf.Variable(tf.zeros([100]))
+W3 = tf.Variable(tf.truncated_normal([100, 10], stddev=0.1))
+B3 = tf.Variable(tf.zeros([10]))
+
 # flatten the images into a single line of pixels
 # -1 in the shape definition means "the only possible dimension that will preserve the number of elements"
+#XX = tf.reshape(X, [-1, 784])
+
 XX = tf.reshape(X, [-1, 784])
 
 # The model
-Y = tf.nn.softmax(tf.matmul(XX, W) + b)
+#Y = tf.nn.softmax(tf.matmul(XX, W) + b)
+
+Y1 = tf.nn.sigmoid(tf.matmul(XX, W1) + B1)
+Y2 = tf.nn.sigmoid(tf.matmul(Y1, W2) + B2)
+Y  = tf.nn.softmax(tf.matmul(Y2, W3) + B3)
+
 
 # loss function: cross-entropy = - sum( Y_i * log(Yi) )
 #                           Y: the computed output vector

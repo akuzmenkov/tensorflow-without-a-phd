@@ -17,8 +17,11 @@ import tensorflow as tf
 import tensorflowvisu
 import math
 import mnistdata
+import os
 print("Tensorflow version " + tf.__version__)
 tf.set_random_seed(0)
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 # Download images and labels into mnist.test (10K images+labels) and mnist.train (60K images+labels)
 mnist = mnistdata.read_data_sets("data", one_hot=True, reshape=False)
@@ -156,4 +159,3 @@ print("max test accuracy: " + str(datavis.get_max_test_accuracy()))
 # layers 6 12 24 200, patches 6x6str1 5x5str2 4x4str2 no dropout best 0.9906 after 3100 iterations (avove 0.99 from iteration 1400)
 #*layers 6 12 24 200, patches 6x6str1 5x5str2 4x4str2 dropout=0.75 best 0.9928 after 12800 iterations (but consistently above 0.99 after 1300 iterations only, 0.9916 at 2300 iterations, 0.9921 at 5600, 0.9925 at 20000)
 #*same with dacaying learning rate 0.003-0.0001-2000: best 0.9931 (on other runs max accuracy 0.9921, 0.9927, 0.9935, 0.9929, 0.9933)
-

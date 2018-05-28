@@ -17,8 +17,11 @@ import tensorflow as tf
 import tensorflowvisu
 import math
 import mnistdata
+import os
 print("Tensorflow version " + tf.__version__)
 tf.set_random_seed(0)
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 # neural network with 5 layers
 #

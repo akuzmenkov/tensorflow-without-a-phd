@@ -17,7 +17,10 @@ import tensorflow as tf
 import tensorflowvisu
 import math
 import mnistdata
+import os
 print("Tensorflow version " + tf.__version__)
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 # Download images and labels into mnist.test (10K images+labels) and mnist.train (60K images+labels)
 mnist = mnistdata.read_data_sets("data", one_hot=True, reshape=False)
