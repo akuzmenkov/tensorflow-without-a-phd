@@ -21,7 +21,7 @@ import os
 print("Tensorflow version " + tf.__version__)
 tf.set_random_seed(0)
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 # neural network with 1 layer of 10 softmax neurons
 #
@@ -53,12 +53,21 @@ W = tf.Variable(tf.zeros([784, 10]))
 b = tf.Variable(tf.zeros([10]))
 
 
-W1 = tf.Variable(tf.truncated_normal([784, 200] ,stddev=0.1))
-B1 = tf.Variable(tf.zeros([200]))
-W2 = tf.Variable(tf.truncated_normal([200, 100], stddev=0.1))
-B2 = tf.Variable(tf.zeros([100]))
-W3 = tf.Variable(tf.truncated_normal([100, 10], stddev=0.1))
-B3 = tf.Variable(tf.zeros([10]))
+W1 = tf.Variable(tf.truncated_normal([784, 300] ,stddev=0.1))
+B1 = tf.Variable(tf.zeros([300]))
+W2 = tf.Variable(tf.truncated_normal([300, 200], stddev=0.1))
+B2 = tf.Variable(tf.zeros([200]))
+W3 = tf.Variable(tf.truncated_normal([200, 100], stddev=0.1))
+B3 = tf.Variable(tf.zeros([100]))
+W4 = tf.Variable(tf.truncated_normal([100, 50], stddev=0.1))
+B4 = tf.Variable(tf.zeros([50]))
+W5 = tf.Variable(tf.truncated_normal([50, 30], stddev=0.1))
+B5 = tf.Variable(tf.zeros([30]))
+W6 = tf.Variable(tf.truncated_normal([30, 20], stddev=0.1))
+B6 = tf.Variable(tf.zeros([20]))
+W7 = tf.Variable(tf.truncated_normal([20, 10], stddev=0.1))
+B7 = tf.Variable(tf.zeros([10]))
+
 
 # flatten the images into a single line of pixels
 # -1 in the shape definition means "the only possible dimension that will preserve the number of elements"
@@ -69,9 +78,14 @@ XX = tf.reshape(X, [-1, 784])
 # The model
 #Y = tf.nn.softmax(tf.matmul(XX, W) + b)
 
-Y1 = tf.nn.sigmoid(tf.matmul(XX, W1) + B1)
-Y2 = tf.nn.sigmoid(tf.matmul(Y1, W2) + B2)
-Y  = tf.nn.softmax(tf.matmul(Y2, W3) + B3)
+Y1 = tf.nn.relu(tf.matmul(XX, W1) + B1)
+Y2 = tf.nn.relu(tf.matmul(Y1, W2) + B2)
+Y3 = tf.nn.relu(tf.matmul(Y2, W3) + B3)
+Y4 = tf.nn.relu(tf.matmul(Y3, W4) + B4)
+Y5 = tf.nn.relu(tf.matmul(Y4, W5) + B5)
+Y6 = tf.nn.relu(tf.matmul(Y5, W6) + B6)
+
+Y  = tf.nn.softmax(tf.matmul(Y6, W7) + B7)
 
 
 # loss function: cross-entropy = - sum( Y_i * log(Yi) )
@@ -90,7 +104,8 @@ correct_prediction = tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 # training, learning rate = 0.005
-train_step = tf.train.GradientDescentOptimizer(0.005).minimize(cross_entropy)
+#train_step = tf.train.GradientDescentOptimizer(0.005).minimize(cross_entropy)
+train_step = tf.train.AdamOptimizer(0.005).minimize(cross_entropy)
 
 # matplotlib visualisation
 allweights = tf.reshape(W, [-1])
@@ -130,8 +145,8 @@ def training_step(i, update_test_data, update_train_data):
     sess.run(train_step, feed_dict={X: batch_X, Y_: batch_Y})
 
 
-#datavis.animate(training_step, iterations=2000+1, train_data_update_freq=10, test_data_update_freq=50, more_tests_at_start=True)
-for i in range(2000+1): training_step(i, i % 50 == 0, i % 10 == 0)
+#datavis.animate(training_step, iterations=4500+1, train_data_update_freq=10, test_data_update_freq=50, more_tests_at_start=True)
+for i in range(4500+1): training_step(i, i % 50 == 0, i % 10 == 0)
 
 # to save the animation as a movie, add save_movie=True as an argument to datavis.animate
 # to disable the visualisation use the following line instead of the datavis.animate line
